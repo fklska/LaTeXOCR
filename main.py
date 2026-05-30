@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import Canvas, Button, Label, Frame, Scale
 from PIL import Image, ImageDraw, ImageTk
-from inference import predict_from_image
+from inference import inference
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -76,7 +76,7 @@ def clear_canvas():
     render_label.image = None
 
 def recognize_expression():
-    latex_result = predict_from_image(image)
+    latex_result = inference(image)
     
     # Обновляем текстовое поле (делаем доступным для записи, меняем текст, закрываем)
     result_entry.config(state='normal')

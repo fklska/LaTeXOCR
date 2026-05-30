@@ -8,6 +8,7 @@ import torch.nn.functional as F
 from huggingface_hub import PyTorchModelHubMixin, hf_hub_download
 import torchvision.models as models
 import json
+from torchvision.models import resnet50, ResNet50_Weights
 
 class LatexTokenizer:
     def __init__(self):
@@ -47,88 +48,33 @@ class LatexTokenizer:
         tokens = [self.idx2token[int(idx)] for idx in indices]
         return " ".join([t for t in tokens if t not in [self.pad_token, self.sos_token, self.eos_token]])
     
+class LaTeXOCR(nn.Module, PyTorchModelHubMixin):
+  def __init__(self, vocab_size: int = 113, dim: int = 2048, hidden_dim: int = 512) -> None:
+      super().__init__()
+      self.feature_extractor = nn.Sequential(*list(resnet50(weights=ResNet50_Weights.IMAGENET1K_V2).children())[:-2])
+      self.embedding = nn.Embedding(vocab_size, dim)
 
-class BahdanauAttention(nn.Module):
-    def __init__(self, encoder_dim, decoder_dim, attention_dim):
-        super().__init__()
-        self.encoder_mapping = nn.Linear(encoder_dim, attention_dim)
-        self.decoder_mapping = nn.Linear(decoder_dim, attention_dim)
-        self.full_attention = nn.Linear(attention_dim, 1)
-        
-    def forward(self, encoder_outputs, decoder_hidden):
-        enc_proj = self.encoder_mapping(encoder_outputs)
-        
-        dec_proj = self.decoder_mapping(decoder_hidden).unsqueeze(1)
-        
-        scores = self.full_attention(torch.tanh(enc_proj + dec_proj))
-        
-        scores = scores.squeeze(2)
-        alphas = F.softmax(scores, dim=-1)
-        
-        context_vector = torch.sum(encoder_outputs * alphas.unsqueeze(2), dim=1)
-        
-        return context_vector, alphas
-    
+      self.init_h = nn.Linear(dim, hidden_dim)
+      self.init_c = nn.Linear(dim, hidden_dim)
 
-class AttentionResNetLaTeXModel(nn.Module, PyTorchModelHubMixin):
-    def __init__(self, vocab_size, emb_dim=256, decoder_dim=512, attention_dim=256):
-        super().__init__()
-        
-        resnet = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
-        self.backbone = nn.Sequential(*list(resnet.children())[:-2])
-        self.encoder_dim = 512
-        
-        self.attention = BahdanauAttention(
-            encoder_dim=self.encoder_dim, 
-            decoder_dim=decoder_dim, 
-            attention_dim=attention_dim
-        )
-        
-        self.embedding = nn.Embedding(vocab_size, emb_dim)
-        
-        self.lstm_cell = nn.LSTMCell(input_size=emb_dim + self.encoder_dim, hidden_size=decoder_dim)
-        
-        self.fc_out = nn.Linear(decoder_dim, vocab_size)
-        
-        self.init_h = nn.Linear(self.encoder_dim, decoder_dim)
-        self.init_c = nn.Linear(self.encoder_dim, decoder_dim)
-        
-        self.decoder_dim = decoder_dim
+      self.lstm = nn.LSTM(dim, hidden_dim, batch_first = True)
+      self.fc = nn.Linear(hidden_dim, vocab_size)
 
-    def _init_hidden_state(self, encoder_outputs):
-        mean_encoder_outputs = encoder_outputs.mean(dim=1)
-        h = torch.tanh(self.init_h(mean_encoder_outputs))
-        c = torch.tanh(self.init_c(mean_encoder_outputs))
-        return h, c
+  def forward(self, image, label):
+    features = self.feature_extractor(image)
+    img_embeddings = features.mean(dim=[2, 3])
+    h0 = self.init_h(img_embeddings).unsqueeze(0)
+    c0 = self.init_c(img_embeddings).unsqueeze(0)
 
-    def forward(self, images, formulas):
-        batch_size = images.size(0)
-        seq_len = formulas.size(1)
-        
-        encoder_outputs = self.backbone(images).flatten(2).permute(0, 2, 1)
-        
-        h, c = self._init_hidden_state(encoder_outputs)
-        
-        predictions = torch.zeros(batch_size, seq_len - 1, self.fc_out.out_features).to(images.device)
-        
-        embeddings = self.embedding(formulas)
-        
-        for t in range(seq_len - 1):
-            context, _ = self.attention(encoder_outputs, h)
-            
-            current_emb = embeddings[:, t, :]
-            
-            lstm_input = torch.cat([current_emb, context], dim=1)
-            
-            h, c = self.lstm_cell(lstm_input, (h, c))
-            
-            preds = self.fc_out(h)
-            predictions[:, t, :] = preds
-            
-        return predictions
-    
+    tgt_embeddings = self.embedding(label[:, :-1])
 
-model = AttentionResNetLaTeXModel.from_pretrained("fklska/LaTeX_OCR")
+    output, _ = self.lstm(tgt_embeddings, (h0, c0))
+    logits = self.fc(output)
+
+    return logits
+
+
+model = LaTeXOCR.from_pretrained("fklska/LaTeX_OCR").to("cpu")
 vocab_file_path = hf_hub_download(repo_id="fklska/LaTeX_OCR", filename="token2idx.json")
 
 with open(vocab_file_path, "r", encoding="utf-8") as f:

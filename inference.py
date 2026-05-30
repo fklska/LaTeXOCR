@@ -4,38 +4,41 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.transforms as T
 
-device = "cpu"
 
-def predict_from_image(pil_image, max_len=50):
-    transforms = T.Compose([
-        T.Resize((128, 256)),
-        T.ToTensor(),
-        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-    ])
-    
-    image_tensor = transforms(pil_image).unsqueeze(0).to(device)
-    
+def inference(image, model = model, tokenizer=tokenizer, max_len=100, device="cpu"):
+    model.eval()
+    model.to(device)
+
+    transforms = T.Compose(
+        [
+            T.Resize((256, 256)),
+            T.ToTensor(),
+            T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ]
+    )
+    image_tensor = transforms(image).unsqueeze(0).to(device)
+
     with torch.no_grad():
-        encoder_outputs = model.backbone(image_tensor).flatten(2).permute(0, 2, 1)
-        h, c = model._init_hidden_state(encoder_outputs)
-        
-    generated_tokens = [tokenizer.token2idx["<sos>"]]
-    eos_idx = tokenizer.token2idx["<eos>"]
-    
-    for _ in range(max_len):
-        last_token = generated_tokens[-1]
-        token_tensor = torch.tensor([[last_token]], dtype=torch.long).to(device)
-        
-        with torch.no_grad():
-            current_emb = model.embedding(token_tensor).squeeze(1)
-            context, _ = model.attention(encoder_outputs, h)
-            lstm_input = torch.cat([current_emb, context], dim=1)
-            h, c = model.lstm_cell(lstm_input, (h, c))
-            logits = model.fc_out(h)
-            next_token = logits.argmax(dim=-1).item()
-            
-        generated_tokens.append(next_token)
-        if next_token == eos_idx:
-            break
-            
+        features = model.feature_extractor(image_tensor)
+        img_embeddings = features.mean(dim=[2, 3])
+        h = model.init_h(img_embeddings).unsqueeze(0)
+        c = model.init_c(img_embeddings).unsqueeze(0)
+
+        current_token = torch.tensor([[tokenizer.token2idx[tokenizer.sos_token]]], device=device)
+        generated_tokens = []
+
+        for _ in range(max_len):
+            tgt_embedding = model.embedding(current_token)
+            output, (h, c) = model.lstm(tgt_embedding, (h, c))
+            logits = model.fc(output)
+
+            next_token = logits.argmax(dim=-1)
+            token_id = next_token.item()
+
+            if token_id == tokenizer.token2idx[tokenizer.eos_token]:
+                break
+
+            generated_tokens.append(token_id)
+            current_token = next_token
+
     return tokenizer.decode(generated_tokens)
