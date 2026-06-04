@@ -10,7 +10,33 @@ CNN модель для распознавания рукописных мате
 
 ## Установка
 
-1. Клонировать репозиторий:
+1. Клонировать репозиторий и переключиться на ветку:
 ```bash
-git clone https://github.com/your-username/symbol-recognition.git
-cd symbol-recognition
+git clone https://github.com/fklska/LaTeXOCR.git
+cd LaTeXOCR
+git checkout feature/symbol-recognition
+
+2. Установить зависимости:
+
+```bash
+pip install -r requirements.txt
+
+
+3. Использование
+Графический интерфейс
+
+```bash
+python app.py
+
+4. Структура проекта
+├── model/
+│   ├── best_model.h5      # Обученная модель
+│   └── class_names.pkl    # Список классов
+├── app.py                 # GUI приложение
+├── app_2.py               # GUI приложение
+├── predict.py             # API для распознавания
+└── requirements.txt       # Зависимости
+
+5. Метрики модели
+Точность на тесте: 91.45%
+Количество классов: 91
