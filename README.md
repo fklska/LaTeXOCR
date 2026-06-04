@@ -15,18 +15,23 @@ CNN модель для распознавания рукописных мате
 git clone https://github.com/fklska/LaTeXOCR.git
 cd LaTeXOCR
 git checkout feature/symbol-recognition
-
+``` 
 2. Установить зависимости:
 
 ```bash
 pip install -r requirements.txt
-
+```
 
 3. Использование
 Графический интерфейс
 
 ```bash
 python app.py
+```
+или 
+```bash
+python app_2.py
+```
 
 4. Структура проекта
 ├── model/
