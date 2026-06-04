@@ -23,7 +23,7 @@ pip install -r requirements.txt
 ```
 
 3. Использование
-Графический интерфейс
+    Графический интерфейс
 
 ```bash
 python app.py
@@ -34,6 +34,7 @@ python app_2.py
 ```
 
 4. Структура проекта
+```bash
 ├── model/
 │   ├── best_model.h5      # Обученная модель
 │   └── class_names.pkl    # Список классов
@@ -41,6 +42,7 @@ python app_2.py
 ├── app_2.py               # GUI приложение
 ├── predict.py             # API для распознавания
 └── requirements.txt       # Зависимости
+```
 
 5. Метрики модели
 Точность на тесте: 91.45%
