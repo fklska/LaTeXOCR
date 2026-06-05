@@ -8,7 +8,7 @@ matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import io
-from models import model, tokenizer
+from models import TrOCR
 from matplotlib import pyplot as plt
 
 transform = T.Compose([
@@ -109,11 +109,10 @@ class App:
     def predict(self):
         # Предобработка
         img_input = self.img.copy()
-        tensor = transform(img_input).unsqueeze(0).to(device)
+        #tensor = transform(img_input).unsqueeze(0).to(device)
 
         # Генерация (заменить на вызов реальной модели)
-        pred = model.predict(tensor, tokenizer, max_len=100)
-        latex_code = pred[0] if pred else ""
+        latex_code = TrOCR.predict_latex(img_input)
 
         self.text_latex.delete(1.0, tk.END)
         self.text_latex.insert(tk.END, latex_code)

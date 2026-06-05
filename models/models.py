@@ -74,7 +74,6 @@ class LaTeXOCR(nn.Module, PyTorchModelHubMixin):
 
     return logits
 
-
 class BahdanauAttention(nn.Module):
     def __init__(self, hidden_size = 512, key_dim = 2048):
         super(BahdanauAttention, self).__init__()
@@ -210,7 +209,7 @@ class Im2LatexModel(nn.Module, PyTorchModelHubMixin):
             return [tokenizer.decode(best_seq)]
 
 
-model = Im2LatexModel.from_pretrained("fklska/TOCR-LaTeX").to("cpu")
+model = Im2LatexModel.from_pretrained("fklska/TOCR-LaTeX", revision="").to("cpu")
 vocab_file_path = hf_hub_download(repo_id="fklska/LaTeX_OCR", filename="token2idx.json")
 
 with open(vocab_file_path, "r", encoding="utf-8") as f:
