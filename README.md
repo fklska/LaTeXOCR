@@ -1,3 +1,32 @@
-# LaTeXOCR
+# Formula Recognizer
 
-[Колаб](https://colab.research.google.com/drive/117HU_5Th7UJWIGrOgKiIeJrjZSDvco5V?usp=sharing)
+Распознавание рукописных математических формул с помощью YOLO.
+
+## Установка
+
+1. Клонируйте репозиторий:
+```bash
+git clone -b symbol_detection https://github.com/fklska/LaTeXOCR.git
+cd LaTeXOCR
+```
+
+2. Установите зависимости:
+
+```bash
+pip install -r requirements.txt
+```
+
+3. Скачайте обученную модель YOLO best.pt и поместите в папку проекта YOLO
+
+## Запуск
+```bash
+cd YOLO
+python detect.py
+```
+
+## Использование
+1. Нарисуйте формулу мышкой в левой области
+
+2. Нажмите "Распознать"
+
+3. Справа появится изображение с выделенными символами и список распознанных символов
