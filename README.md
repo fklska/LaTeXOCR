@@ -20,7 +20,6 @@ pip install -r requirements.txt
 
 ## Запуск
 ```bash
-cd YOLO
 python detect.py
 ```
 
