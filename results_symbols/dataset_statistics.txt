@@ -1,0 +1,328 @@
+================================================================================
+СТАТИСТИКА ДАТАСЕТА
+Дата генерации: 2026-06-03 18:30:46
+================================================================================
+
+TRAIN:
+  Всего изображений: 54,630
+  Количество классов: 91
+
+  Статистика распределения:
+    Среднее на класс: 600.3
+    Медиана: 232.0
+    Стандартное отклонение: 981.1
+    Min: 6 (класс: exists)
+    Max: 5218 (класс: minus)
+    Коэффициент дисбаланса (max/min): 869.67
+
+  Полное распределение по классам:
+    minus: 5218
+    2: 4296
+    plus: 4151
+    x: 3560
+    1: 3190
+    lparen: 2205
+    rparen: 2205
+    eq: 1981
+    sqrt: 1634
+    a: 1606
+    3: 1502
+    y: 1225
+    b: 1193
+    n_lower: 1109
+    4: 1081
+    z: 980
+    0: 907
+    d: 852
+    sin: 781
+    i: 691
+    c: 663
+    cos: 550
+    dot_symbol: 532
+    theta: 521
+    sum: 517
+    int: 487
+    pi: 451
+    k: 441
+    e: 435
+    t_lower: 378
+    9: 367
+    alpha: 360
+    tan: 332
+    5: 325
+    8: 293
+    beta: 292
+    p: 286
+    times: 286
+    7: 279
+    log: 268
+    lbracket: 261
+    q: 261
+    rbracket: 261
+    j: 255
+    6: 251
+    R_upper: 232
+    g: 230
+    u: 230
+    m_lower: 229
+    vertical_bar: 220
+    rightarrow: 199
+    lim: 189
+    comma: 186
+    F_upper: 184
+    s: 181
+    infinity: 167
+    V_upper: 153
+    N_upper: 152
+    r_lower: 148
+    w: 139
+    T_upper: 129
+    M_upper: 122
+    o: 115
+    f_lower: 113
+    l_lower: 103
+    prime: 91
+    lbrace: 90
+    rbrace: 90
+    h_lower: 87
+    ldots: 81
+    sigma: 79
+    leq: 75
+    lt: 74
+    geq: 73
+    gamma: 72
+    H_upper: 72
+    mu: 70
+    pm: 65
+    Delta: 61
+    phi: 57
+    exclamation: 50
+    slash: 47
+    gt: 46
+    L_upper: 46
+    lambda: 38
+    neq: 35
+    v_lower: 34
+    div: 22
+    in: 21
+    forall: 8
+    exists: 6
+
+--------------------------------------------------------------------------------
+
+VAL:
+  Всего изображений: 11,109
+  Количество классов: 91
+
+  Статистика распределения:
+    Среднее на класс: 122.1
+    Медиана: 47.0
+    Стандартное отклонение: 192.7
+    Min: 2 (класс: exists)
+    Max: 887 (класс: 2)
+    Коэффициент дисбаланса (max/min): 443.50
+
+  Полное распределение по классам:
+    2: 887
+    1: 774
+    plus: 749
+    minus: 727
+    x: 693
+    lparen: 563
+    rparen: 562
+    eq: 516
+    3: 344
+    a: 339
+    n_lower: 291
+    0: 257
+    y: 247
+    sqrt: 240
+    4: 233
+    b: 221
+    z: 153
+    d: 149
+    5: 143
+    c: 131
+    i: 121
+    6: 113
+    7: 103
+    9: 102
+    8: 98
+    sin: 97
+    comma: 96
+    k: 90
+    t_lower: 88
+    f_lower: 85
+    p: 84
+    int: 80
+    times: 80
+    sum: 79
+    theta: 79
+    cos: 76
+    pi: 74
+    e: 66
+    m_lower: 61
+    vertical_bar: 56
+    alpha: 54
+    infinity: 52
+    lbracket: 49
+    rbracket: 49
+    r_lower: 48
+    u: 47
+    g: 46
+    q: 44
+    j: 43
+    rightarrow: 43
+    tan: 40
+    log: 36
+    beta: 35
+    s: 35
+    leq: 33
+    h_lower: 32
+    lim: 31
+    slash: 28
+    ldots: 26
+    V_upper: 26
+    R_upper: 24
+    pm: 22
+    dot_symbol: 21
+    geq: 20
+    w: 20
+    div: 18
+    lt: 17
+    L_upper: 16
+    neq: 16
+    v_lower: 15
+    exclamation: 14
+    gamma: 14
+    phi: 13
+    N_upper: 12
+    o: 12
+    lbrace: 11
+    prime: 11
+    rbrace: 11
+    F_upper: 9
+    gt: 8
+    H_upper: 8
+    mu: 7
+    sigma: 7
+    T_upper: 7
+    Delta: 6
+    l_lower: 6
+    M_upper: 6
+    lambda: 5
+    in: 4
+    forall: 3
+    exists: 2
+
+--------------------------------------------------------------------------------
+
+TEST:
+  Всего изображений: 12,211
+  Количество классов: 91
+
+  Статистика распределения:
+    Среднее на класс: 134.2
+    Медиана: 51.0
+    Стандартное отклонение: 207.1
+    Min: 4 (класс: exists)
+    Max: 938 (класс: 2)
+    Коэффициент дисбаланса (max/min): 234.50
+
+  Полное распределение по классам:
+    2: 938
+    1: 866
+    x: 796
+    plus: 787
+    minus: 783
+    lparen: 596
+    rparen: 596
+    eq: 540
+    a: 361
+    3: 358
+    n_lower: 310
+    sqrt: 284
+    y: 275
+    0: 263
+    4: 238
+    b: 230
+    d: 183
+    5: 168
+    z: 153
+    i: 136
+    c: 135
+    7: 130
+    k: 121
+    6: 114
+    8: 108
+    9: 105
+    sin: 105
+    pi: 103
+    f_lower: 101
+    alpha: 98
+    sum: 97
+    theta: 94
+    int: 93
+    comma: 92
+    cos: 86
+    times: 86
+    e: 85
+    p: 78
+    t_lower: 70
+    leq: 60
+    rightarrow: 58
+    infinity: 56
+    vertical_bar: 54
+    log: 52
+    beta: 51
+    lbracket: 51
+    rbracket: 48
+    g: 45
+    j: 45
+    q: 45
+    u: 43
+    lim: 41
+    m_lower: 41
+    R_upper: 40
+    lt: 39
+    pm: 39
+    tan: 36
+    geq: 33
+    slash: 33
+    ldots: 30
+    r_lower: 30
+    h_lower: 29
+    V_upper: 29
+    s: 27
+    M_upper: 25
+    T_upper: 24
+    w: 24
+    neq: 23
+    gt: 21
+    F_upper: 20
+    mu: 20
+    N_upper: 18
+    o: 17
+    phi: 17
+    Delta: 16
+    exclamation: 15
+    gamma: 15
+    l_lower: 15
+    H_upper: 14
+    lambda: 13
+    lbrace: 11
+    prime: 11
+    rbrace: 11
+    div: 10
+    L_upper: 10
+    dot_symbol: 9
+    in: 9
+    sigma: 9
+    v_lower: 9
+    exists: 4
+    forall: 4
+
+--------------------------------------------------------------------------------
+
+ВСЕГО ИЗОБРАЖЕНИЙ: 77,950
+ВСЕГО УНИКАЛЬНЫХ КЛАССОВ: 91
