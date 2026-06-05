@@ -16,7 +16,7 @@ cd LaTeXOCR
 pip install -r requirements.txt
 ```
 
-3. Скачайте обученную модель YOLO best.pt и поместите в папку проекта YOLO
+3. Скачайте обученную модель YOLO best.pt и поместите в папку проекта
 
 ## Запуск
 ```bash
