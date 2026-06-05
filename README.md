@@ -48,3 +48,11 @@ python app_2.py
 5. Метрики модели
    - Точность на тесте: 91.45%
    - Количество классов: 91
+  
+## статистика обучения
+
+![Пример работы](results_symbols/summary_plot.png)
+![Пример работы](results_symbols/training_history.png)
+![Пример работы](results_symbols/confusion_matrix_enhanced.png)
+![Пример работы](results_symbols/top_confusions.png)
+
