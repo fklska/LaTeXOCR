@@ -5,7 +5,7 @@ import torch.nn.functional as F
 import torchvision.transforms as T
 
 
-def inference(image, model = model, tokenizer=tokenizer, max_len=100, device="cpu"):
+def inference_cnn_lstm(image, model = model, tokenizer=tokenizer, max_len=100, device="cpu"):
 
     model.eval()
     model.to(device)
@@ -45,7 +45,7 @@ def inference(image, model = model, tokenizer=tokenizer, max_len=100, device="cp
     return tokenizer.decode(generated_tokens)
 
 
-def inference_attention(
+def inference_attention_GRU(
     image, model=model, tokenizer=tokenizer, max_len=100, device="cpu"
 ):
     model.eval()

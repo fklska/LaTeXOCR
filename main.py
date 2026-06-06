@@ -9,7 +9,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import io
 from models import TrOCR, ViT_TDecoder
-from inference import inference, inference_attention
+from inference import inference_cnn_lstm, inference_attention_GRU
 from matplotlib import pyplot as plt
 
 transform = T.Compose([
