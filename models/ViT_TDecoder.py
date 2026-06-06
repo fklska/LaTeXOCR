@@ -48,77 +48,6 @@ class LatexTokenizer:
     def decode(self, indices):
         tokens = [self.idx2token[int(idx)] for idx in indices]
         return " ".join([t for t in tokens if t not in [self.pad_token, self.sos_token, self.eos_token]])
-    
-class LaTeXOCR(nn.Module, PyTorchModelHubMixin):
-  def __init__(self, vocab_size: int = 113, dim: int = 2048, hidden_dim: int = 512) -> None:
-      super().__init__()
-      self.feature_extractor = nn.Sequential(*list(resnet50(weights=ResNet50_Weights.IMAGENET1K_V2).children())[:-2])
-      self.embedding = nn.Embedding(vocab_size, dim)
-
-      self.init_h = nn.Linear(dim, hidden_dim)
-      self.init_c = nn.Linear(dim, hidden_dim)
-
-      self.lstm = nn.LSTM(dim, hidden_dim, batch_first = True)
-      self.fc = nn.Linear(hidden_dim, vocab_size)
-
-  def forward(self, image, label):
-    features = self.feature_extractor(image)
-    img_embeddings = features.mean(dim=[2, 3])
-    h0 = self.init_h(img_embeddings).unsqueeze(0)
-    c0 = self.init_c(img_embeddings).unsqueeze(0)
-
-    tgt_embeddings = self.embedding(label[:, :-1])
-
-    output, _ = self.lstm(tgt_embeddings, (h0, c0))
-    logits = self.fc(output)
-
-    return logits
-
-class BahdanauAttention(nn.Module):
-    def __init__(self, hidden_size = 512, key_dim = 2048):
-        super(BahdanauAttention, self).__init__()
-        self.Wa = nn.Linear(hidden_size, hidden_size)
-        self.Ua = nn.Linear(key_dim, hidden_size)
-        self.Va = nn.Linear(hidden_size, 1)
-
-    def forward(self, query, keys):
-        scores = self.Va(torch.tanh(self.Wa(query) + self.Ua(keys)))
-        scores = scores.squeeze(2).unsqueeze(1)
-
-        weights = F.softmax(scores, dim=-1)
-        context = torch.bmm(weights, keys)
-
-        return context, weights
-    
-class AttGRU(nn.Module, PyTorchModelHubMixin):
-  def __init__(self, vocab_size: int = 113, dim: int = 2048, hidden_dim: int = 512, dropout_p: int = 0.1) -> None:
-      super().__init__()
-      self.feature_extractor = nn.Sequential(*list(resnet50(weights=ResNet50_Weights.IMAGENET1K_V2).children())[:-2])
-
-      self.embedding = nn.Embedding(vocab_size, hidden_dim)
-      self.attention = BahdanauAttention(hidden_dim, dim)
-      self.gru = nn.GRU(dim + hidden_dim, hidden_dim, batch_first=True)
-      self.out = nn.Linear(hidden_dim, vocab_size)
-      self.dropout = nn.Dropout(dropout_p)
-
-  def forward(self, image, label):
-      features = self.feature_extractor(image)
-      keys = features.flatten(2).permute(0, 2, 1)
-      hidden = torch.zeros(1, image.size(0), 512, device=image.device)
-      tgt_embeddings = self.dropout(self.embedding(label[:, :-1]))
-
-      outputs = []
-      for t in range(tgt_embeddings.size(1)):
-          current_emb = tgt_embeddings[:, t : t + 1, :]
-          query = hidden.permute(1, 0, 2)
-          context, _ = self.attention(query, keys)
-          gru_input = torch.cat([current_emb, context], dim=-1)
-          output, hidden = self.gru(gru_input, hidden)
-          outputs.append(output)
-
-      outputs = torch.cat(outputs, dim=1)
-      logits = self.out(self.dropout(outputs))
-      return logits
 
 class Encoder(nn.Module):
     def __init__(self):
@@ -209,7 +138,7 @@ class Im2LatexModel(nn.Module, PyTorchModelHubMixin):
             return [tokenizer.decode(best_seq)]
 
 
-model = Im2LatexModel.from_pretrained("fklska/TOCR-LaTeX", revision="").to("cpu")
+model = Im2LatexModel.from_pretrained("fklska/ViT_TDecoderOCR").to("cpu")
 vocab_file_path = hf_hub_download(repo_id="fklska/LaTeX_OCR", filename="token2idx.json")
 
 with open(vocab_file_path, "r", encoding="utf-8") as f:

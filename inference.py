@@ -1,4 +1,4 @@
-from models.models import model, tokenizer
+from models.ViT_TDecoder import model, tokenizer
 import torch
 import torch.nn as nn
 import torch.nn.functional as F

@@ -8,7 +8,8 @@ matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import io
-from models import TrOCR
+from models import TrOCR, ViT_TDecoder
+from inference import inference, inference_attention
 from matplotlib import pyplot as plt
 
 transform = T.Compose([
@@ -109,7 +110,7 @@ class App:
     def predict(self):
         # Предобработка
         img_input = self.img.copy()
-        #tensor = transform(img_input).unsqueeze(0).to(device)
+        tensor = transform(img_input).unsqueeze(0).to(device)
 
         # Генерация (заменить на вызов реальной модели)
         latex_code = TrOCR.predict_latex(img_input)
